@@ -1,13 +1,21 @@
 from tkinter import *
-from tkinter import messagebox, simpledialog
+from funciones import obtener_resolucion_pantalla, obtenerDatos
+from tkinter import messagebox, simpledialog 
+import tkinter as tk
 
 raiz = Tk()
+ancho, alto = obtener_resolucion_pantalla()
+ancho_str = str(int(ancho/2))
+alto_str = str(int(alto))
+dimension = ancho_str+'x'+alto_str
 raiz.title("Registro de Alumno")
-raiz.geometry("630x550")
+raiz.geometry(dimension)
 raiz.resizable(False, False)
 
 ventana = Frame(raiz)
 ventana.grid(row=1, column=0)
+
+
 
 # Etiquetas__________________________________________________________________________
 nombre = Label(ventana, text="Nombre(s):")
@@ -92,8 +100,8 @@ combo_genero.grid(column=2, row=5, pady=4, padx=4)
 combo_genero.config(width=26)
 
 # Variables globales
-registros = []
 
+registros = []
 # Funciones__________________________________________________________________
 
 def sigui():
@@ -116,7 +124,14 @@ def sigui():
         messagebox.showinfo("Advertencia", mensaje)
         edad_cuadro.delete(0, END)
         return
-
+##ESTO HAY QUE CAMBIARLO. El registro hay que guardarlo como un diccionario para ingresarlo al JSON.
+    '''
+    registro = {
+    "nombre":"",
+    "apellido":"",
+    "edad":"",
+    }
+    '''
     registro = [
         "*****Nuevo Registro******",
         nombre_cuadro.get(),
@@ -184,6 +199,9 @@ def eliminar_registro():
                 messagebox.showinfo("Eliminar Registro", "El número de registro ingresado no es válido.")
         else:
             messagebox.showinfo("Eliminar Registro", "No se eliminó el registro.")
+
+
+
 
 # Botones___________________________________________________________________
 

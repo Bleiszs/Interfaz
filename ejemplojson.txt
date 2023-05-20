@@ -1,0 +1,20 @@
+{
+    "1":
+    {"nombre":"wander",
+    "apellido":"astorga",
+    "correo":"adsdasd",
+    },
+        "2":
+    {"nombre":"wander",
+    "apellido":"astorga",
+    "correo":"adsdasd",
+    },
+        "3":
+    {"nombre":"wander",
+    "apellido":"astorga",
+    "correo":"adsdasd",
+    },
+}
+
+for registros in json:
+
