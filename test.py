@@ -236,11 +236,11 @@ def cargar_archivos():
     global registros
     num_registros = len(registros)
     analisis_cuadro.delete("1.0", END)
-    for i, registro in enumerate(registros.values(), 1):
-        nombre = registro.get("Nombre", "")
-        apellido_paterno = registro.get("Apellido paterno", "")
-        telefonos = registro.get("Telfonos", "")  # Modificación realizada aquí
-        analisis_cuadro.insert(END, f"Número de Registro: {i}\n")
+    for key, values in registros.items():
+        nombre = values.get("Nombre", "")
+        apellido_paterno = values.get("Apellido paterno", "")
+        telefonos = values.get("Telfonos", "")  # Modificación realizada aquíc
+        analisis_cuadro.insert(END, f"Número de Registro: {str(key)}\n")
         analisis_cuadro.insert(END, f"Nombre: {nombre}\n")
         analisis_cuadro.insert(END, f"Apellido Paterno: {apellido_paterno}\n")
         analisis_cuadro.insert(END, f"Teléfonos: {telefonos}\n")  # Modificación realizada aquí
