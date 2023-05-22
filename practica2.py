@@ -146,7 +146,7 @@ def sigui():
 numero_de_registro=len(registros)+1   
 
 registro = {"Nombre": str(nombres_cuadro.get()),
-        "Apellido paterno" : str(apellido_p_cuadro.get()),
+        "Apellido paterno": str(apellido_p_cuadro.get()),
         "Apellido materno" :  str(apellido_m_cuadro.get()),
         "Edad" : str(edad_cuadro.get()),
         "Direccion" :  str(direccion_cuadro.get()),
@@ -155,7 +155,7 @@ registro = {"Nombre": str(nombres_cuadro.get()),
         "Carrera" : str(carrera_seleccionada.get()),
          "Genero" : str(genero_seleccionado.get()), 
         "Observaciones" :str (observaciones_cuadro.get())
-        }
+        }   
         
         
 

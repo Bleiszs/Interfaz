@@ -10,12 +10,11 @@ from tkinter import filedialog
 raiz = Tk()
 ancho, alto = obtener_resolucion_pantalla()
 ancho_str = str(int(ancho / 2))
-alto_str = str(int(alto ))
+alto_str = str(int(alto))
 dimension = ancho_str + 'x' + alto_str
 raiz.title("Ingreso de alumnos")
 raiz.geometry(dimension)
 raiz.resizable(False, False)
-
 
 ventana = Frame(raiz)
 ventana.grid(row=1, column=0)
@@ -89,7 +88,7 @@ info_accesada_cuadro = Listbox(ventana)
 info_accesada_cuadro.grid(row=14, column=0, padx=4, pady=4, columnspan=5)
 info_accesada_cuadro.config(width=100, height=12)
 
-analisis_cuadro = Text (ventana)
+analisis_cuadro = Text(ventana)
 analisis_cuadro.grid(row=18, column=0, padx=4, pady=4, columnspan=5)
 analisis_cuadro.config(width=80, height=12)
 
@@ -116,21 +115,20 @@ def cargar_datos():
         try:
             with open(archivo, 'r') as file:
                 data = json.load(file)
-
-                return data
+                num_registros = len(data)
+                return data, num_registros
         except FileNotFoundError:
             return {}, 0
     else:
         return {}, 0
 
 registros = cargar_datos()
+num_registros = len(registros)
 
 # Funciones____________________________________________________
 
 def sigui():
-    global registros
-
-    num_registros = len(registros)
+    global registros, num_registros
 
     if nombres_cuadro.get() == "" or apellido_p_cuadro.get() == "" or apellido_m_cuadro.get() == "" or edad_cuadro.get() == "" or direccion_cuadro.get() == "" or correo_cuadro.get() == "" or telefono_cuadro.get() == "" or carrera_seleccionada.get() == "" or genero_seleccionado.get() == "" or observaciones_cuadro.get() == "":
         mensaje = "Faltan espacios por completar"
@@ -170,7 +168,6 @@ def sigui():
     for key, value in registro.items():
         info_accesada_cuadro.insert(END, value)
 
-
 def guardar():
     global registros
 
@@ -185,8 +182,7 @@ def guardar():
     messagebox.showinfo("Registro", "El registro se ha guardado correctamente.")
 
 def limpiar():
-    global registros
-    num_registros = len(registros)
+    global registros, num_registros
 
     nombres_cuadro.delete(0, END)
     apellido_p_cuadro.delete(0, END)
@@ -233,24 +229,26 @@ def guardar_en_archivo(archivo, data):
         json.dump(data, f)
 
 def cargar_archivos():
-    global registros
-    num_registros = len(registros)
+    global registros, num_registros
+
+    registros, num_registros = cargar_datos()
+
     analisis_cuadro.delete("1.0", END)
     for i, registro in enumerate(registros.values(), 1):
         nombre = registro.get("Nombre", "")
         apellido_paterno = registro.get("Apellido paterno", "")
-        telefonos = registro.get("Telfonos", "")  # Modificación realizada aquí
+        telefono = registro.get("Telefono", "")
         analisis_cuadro.insert(END, f"Número de Registro: {i}\n")
         analisis_cuadro.insert(END, f"Nombre: {nombre}\n")
         analisis_cuadro.insert(END, f"Apellido Paterno: {apellido_paterno}\n")
-        analisis_cuadro.insert(END, f"Teléfonos: {telefonos}\n")  # Modificación realizada aquí
+        analisis_cuadro.insert(END, f"Teléfono: {telefono}\n")
         analisis_cuadro.insert(END, "---------------------\n")
     analisis_cuadro.insert(END, f"Número de Registros: {num_registros}\n")
 
 # Botones____________________________________________________
 
 boton_siguiente = Button(ventana, text="Siguiente", command=sigui)
-boton_siguiente.grid(column=1, row=12, padx=4, pady=4)
+boton_siguiente.grid(column=2, row=12, padx=4, pady=4)
 boton_siguiente.config(width=15, background="#CDCDB5")
 
 boton_limpiar = Button(ventana, text="Limpiar", command=limpiar)
@@ -263,7 +261,7 @@ boton_guardar.config(width=27, background="gray65")
 
 boton_eliminar_registro = Button(ventana, text="Seleccionar Registro a Eliminar", command=eliminar_registro)
 boton_eliminar_registro.grid(column=2, row=15, padx=4, pady=4)
-boton_eliminar_registro.config(width=25, background="#AFAFEE")
+boton_eliminar_registro.config(width=20, background="#AFAFEE")
 
 boton_cargar_archivos = Button(ventana, text="Cargar Archivos", command=cargar_archivos)
 boton_cargar_archivos.grid(row=19, column=1, padx=4, pady=4)

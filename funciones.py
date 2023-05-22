@@ -11,8 +11,6 @@ def obtener_resolucion_pantalla():
 
 
 
-def obtenerDatos():
-    with open('datos2.txt', 'r') as f:
-        data = f.dataread()
-        return data
+
+
     
