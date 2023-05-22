@@ -2,13 +2,13 @@ from tkinter import *
 from funciones import obtener_resolucion_pantalla, obtenerDatos
 from tkinter import messagebox, simpledialog 
 import tkinter as tk
-
+import json 
 raiz = Tk()
 ancho, alto = obtener_resolucion_pantalla()
 ancho_str = str(int(ancho/2))
 alto_str = str(int(alto))
 dimension = ancho_str+'x'+alto_str
-raiz.title("Registro de Alumno")
+raiz.title("Ingreso de alumnos")
 raiz.geometry(dimension)
 raiz.resizable(False, False)
 
@@ -18,8 +18,8 @@ ventana.grid(row=1, column=0)
 
 
 # Etiquetas__________________________________________________________________________
-nombre = Label(ventana, text="Nombre(s):")
-nombre.grid(row=0, column=0, padx=4, pady=4)
+nombres = Label(ventana, text="Nombre(s):")
+nombres.grid(row=0, column=0, padx=4, pady=4)
 
 apellido_p = Label(ventana, text="Apellido Paterno:")
 apellido_p.grid(row=0, column=1, padx=4, pady=4)
@@ -51,10 +51,13 @@ genero.grid(row=4, column=2, padx=4, pady=4)
 info_accesada = Label(ventana, text="Verificar la Informacion:")
 info_accesada.grid(row=13, column=1, padx=4, pady=4)
 
+analisis = Label (ventana, text= "Consola de registros")
+analisis.grid(row=17, column=1, padx=4, pady=4)
+
 # Cuadros de texto___________________________________________________________________
 
-nombre_cuadro = Entry(ventana, width=33)
-nombre_cuadro.grid(column=0, row=1, pady=4, padx=4)
+nombres_cuadro = Entry(ventana, width=33)
+nombres_cuadro.grid(column=0, row=1, pady=4, padx=4)
 
 apellido_p_cuadro = Entry(ventana, width=33)
 apellido_p_cuadro.grid(column=1, row=1, pady=4, padx=4)
@@ -83,6 +86,10 @@ info_accesada_cuadro = Listbox(ventana)
 info_accesada_cuadro.grid(row=14, column=0, padx=4, pady=4, columnspan=5)
 info_accesada_cuadro.config(width=100, height=12)
 
+analisis_cuadro = Text (ventana)
+analisis_cuadro.grid(row=18, column=0, padx=4, pady=4, columnspan=5)
+analisis_cuadro.config(width=80, height=12)
+
 # Menu de Opciones___________________________________________________________________
 
 carreras = ["", "Ing. Industrial", "Ing. Civil", "Ing. en Mecatrónica"]
@@ -100,14 +107,18 @@ combo_genero.grid(column=2, row=5, pady=4, padx=4)
 combo_genero.config(width=26)
 
 # Variables globales
+def cargar_datos():
+    data = open ('datos.json', 'r')
+    data = dict(data)
+    return data
 
-registros = []
+registros = cargar_datos()
 # Funciones__________________________________________________________________
 
 def sigui():
     global registros
 
-    if nombre_cuadro.get() == "" or apellido_p_cuadro.get() == "" or apellido_m_cuadro.get() == "" or edad_cuadro.get() == "" or direccion_cuadro.get() == "" or correo_cuadro.get() == "" or telefono_cuadro.get() == "" or carrera_seleccionada.get() == "" or genero_seleccionado.get() == "" or observaciones_cuadro.get() == "":
+    if nombres_cuadro.get() == "" or apellido_p_cuadro.get() == "" or apellido_m_cuadro.get() == "" or edad_cuadro.get() == "" or direccion_cuadro.get() == "" or correo_cuadro.get() == "" or telefono_cuadro.get() == "" or carrera_seleccionada.get() == "" or genero_seleccionado.get() == "" or observaciones_cuadro.get() == "":
         mensaje = "Faltan espacios por completar"
         messagebox.showinfo("Advertencia", mensaje)
         info_accesada_cuadro.delete(0, END)
@@ -132,24 +143,27 @@ def sigui():
     "edad":"",
     }
     '''
-    registro = [
-        "*****Nuevo Registro******",
-        nombre_cuadro.get(),
-        apellido_p_cuadro.get(),
-        apellido_m_cuadro.get(),
-        edad_cuadro.get(),
-        direccion_cuadro.get(),
-        correo_cuadro.get(),
-        telefono_cuadro.get(),
-        carrera_seleccionada.get(),
-        genero_seleccionado.get(),
-        observaciones_cuadro.get()
-    ]
+numero_de_registro=len(registros)+1   
 
-    registros.append(registro)
-    info_accesada_cuadro.delete(0, END)
-    for item in registro:
-        info_accesada_cuadro.insert(END, item)
+registro = {"Nombre": str(nombres_cuadro.get()),
+        "Apellido paterno" : str(apellido_p_cuadro.get()),
+        "Apellido materno" :  str(apellido_m_cuadro.get()),
+        "Edad" : str(edad_cuadro.get()),
+        "Direccion" :  str(direccion_cuadro.get()),
+        "Email" : str(correo_cuadro.get()),
+        "Telfonos": str(telefono_cuadro.get()),
+        "Carrera" : str(carrera_seleccionada.get()),
+         "Genero" : str(genero_seleccionado.get()), 
+        "Observaciones" :str (observaciones_cuadro.get())
+        }
+        
+        
+
+registros[numero_de_registro] = registro
+info_accesada_cuadro.delete(0, END)
+for key, value in registro.items():
+    info_accesada_cuadro.insert(END, value)
+   
 
 def guardar():
     global registros
@@ -158,17 +172,17 @@ def guardar():
         messagebox.showinfo("Guardar", "No hay información para guardar.")
         return
 
-    archivo = "datos2.txt"
+    archivo = "datos.json"
     with open(archivo, "w") as f:
-        for registro in registros:
-            f.write("\n".join(registro) + "\n\n")
+        for registro in registro:
+            f.write(str(registro))
 
     messagebox.showinfo("Registro", "El registro se ha guardado correctamente.")
 
 def limpiar():
     global registros
 
-    nombre_cuadro.delete(0, "end")
+    nombres_cuadro.delete(0, "end")
     apellido_p_cuadro.delete(0, "end")
     apellido_m_cuadro.delete(0, "end")
     edad_cuadro.delete(0, "end")
@@ -217,8 +231,14 @@ boton_guardar = Button(ventana, text="Guardar", command=guardar)
 boton_guardar.grid(column=1, row=15, padx=4, pady=4)
 boton_guardar.config(width=27, background="gray65")
 
-boton_eliminar = Button(ventana, text="Eliminar Registro", command=eliminar_registro)
+boton_eliminar = Button(ventana, text="Eliminar Ultimo Registro", command=eliminar_registro)
 boton_eliminar.grid(column=2, row=15, padx=4, pady=4)
-boton_eliminar.config(width=15, background="#AFAFEE")
+boton_eliminar.config(width=20, background="#AFAFEE")
+
+boton_eliminar_registro = Button (ventana, text= "Seleccionar Registro a Eliminar")
+boton_eliminar_registro.grid(column=1, row= 25, padx=2, pady=2)
+boton_eliminar_registro.config(width=25, background="#AFAFEE" )
+
+
 
 raiz.mainloop()
